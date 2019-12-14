@@ -1,0 +1,19 @@
+version: '2'
+services:
+    influxdb:
+        image: influxdb
+        environment:
+            - INFLUXDB_USER={{ influx_user }}
+            - INFLUXDB_USER_PASSWORD={{ influx_password }}
+        networks:
+            - logging
+    grafana:
+        image: grafana/grafana
+        ports:
+            - "80:3000"
+        networks:
+            - logging
+
+networks:
+    logging:
+        external: true

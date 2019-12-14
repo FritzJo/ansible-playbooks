@@ -1,0 +1,13 @@
+# Installes docker-ce and docker-compose on Debian 10
+
+- hosts: google 
+  tasks:
+  - name: Create directory
+    file:
+      path: ~/docker
+      state: directory
+  - name: Copy docker-compose.yml
+    template:
+      src: docker-compose.j2
+      dest: ~/docker/docker-compose.yml
+      mode: 0644
