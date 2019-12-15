@@ -4,10 +4,15 @@
   tasks:
   - name: Create directory
     file:
-      path: ~/docker
+      path: /docker
       state: directory
+    become: yes
   - name: Copy docker-compose.yml
     template:
       src: docker-compose.j2
-      dest: ~/docker/docker-compose.yml
+      dest: /docker/docker-compose.yml
       mode: 0644
+    become: yes
+  - name: Run docker containers
+    command: docker-compose -f /docker/docker-compose.yml up -d
+    become: yes
