@@ -2,6 +2,7 @@ version: '2'
 services:
     influxdb:
         image: influxdb
+        restart: unless-stopped
         environment:
             - INFLUXDB_USER={{ influx_user }}
             - INFLUXDB_USER_PASSWORD={{ influx_password }}
@@ -10,14 +11,26 @@ services:
             - INFLUXDB_READ_USER_PASSWORD={{ influx_grafana_password }}
         ports:
             - "8086:8086"
+        volumes:
+            - influx-storage:/var/lib/influxdb
         networks:
             - logging
+
     grafana:
         image: grafana/grafana
+        restart: unless-stopped
+        environment:
+            - GF_SECURITY_ADMIN_PASSWORD={{ grafana_password }}
         ports:
             - "80:3000"
+        volumes:
+            - grafana-storage:/var/lib/grafana
         networks:
             - logging
+
+volumes:
+    grafana-storage:
+    influx-storage:
 
 networks:
     logging:
