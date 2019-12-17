@@ -1,0 +1,50 @@
+# Installs Telegraf on Debian 10
+
+- hosts: google 
+  tasks:
+  - name: Update the apt package index
+    become: yes
+    apt:
+      name: "*"
+      state: latest
+      update_cache: yes
+      force_apt_get: yes
+  - name: Install packages for apt add repository over HTTPS
+    become: yes
+    apt:
+      name: "{{ packagesdep }}"
+      force_apt_get: yes
+      state: latest
+      update_cache: yes
+    vars:
+      packagesdep:
+      - apt-transport-https
+  - name: Add Telegraf apt key.
+    apt_key:
+      url: https://repos.influxdata.com/influxdb.key
+      state: present
+    become: yes
+    become_method: sudo
+  - name: Add Telegraf official repository for Debian Buster 
+    apt_repository:
+      repo: deb https://repos.influxdata.com/debian buster stable 
+      state: present
+    become: yes
+  - name: Index new repository into the cache
+    become: yes
+    apt:
+      name: "*"
+      state: latest
+      update_cache: yes
+      force_apt_get: yes
+  - name: Install Telegraf
+    apt:
+      name: "telegraf"
+      state: latest
+    become: yes
+  - name: Configure Telegraf
+    template:
+      src: telegraf.j2
+      dest: /etc/telegraf/telegraf.conf
+      mode: 0644
+    become: yes
