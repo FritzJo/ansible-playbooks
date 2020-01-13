@@ -1,6 +1,6 @@
 # Installes docker-ce and docker-compose on Debian 10
-
-- hosts: google 
+- import_playbook: ../playbook_docker.yaml
+- hosts: all
   tasks:
   - name: Create directory
     file:

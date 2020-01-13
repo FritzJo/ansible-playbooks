@@ -1,6 +1,6 @@
 # Installs Telegraf on Debian 10
 
-- hosts: google 
+- hosts: all 
   tasks:
   - name: Update the apt package index
     become: yes
