@@ -1,6 +1,6 @@
 # Installes docker-ce and docker-compose on Debian 10
 
-- hosts: hetzner 
+- hosts: all 
   tasks:
   - name: Update the apt package index
     become: yes
