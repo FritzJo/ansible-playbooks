@@ -1,6 +1,6 @@
 # Installes docker-ce and docker-compose on Debian 10
 
-- hosts: google 
+- hosts: hetzner 
   tasks:
   - name: Update the apt package index
     become: yes
@@ -51,6 +51,21 @@
     become: yes
   - name: install docker tools
     apt:
-      name: "docker-compose"
+      name: "{{ packages_list }}"
       state: latest
     become: yes
+    vars:
+      packages_list:
+      - docker-compose
+      - gcc
+      - python-dev
+      - python-pip
+      - python-setuptools
+      - python-virtualenv
+  - name: install ansible extensions
+    pip:
+      name: "{{ packages_pip }}" 
+    vars:
+      packages_pip:
+      - docker
+      - docker-compose

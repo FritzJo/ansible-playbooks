@@ -1,5 +1,9 @@
 # Installes docker-ce and docker-compose on Debian 10
-- import_playbook: ../playbook_docker.yaml
+
+# Install docker 
+- import_playbook: ../../general/playbook_docker.yaml
+
+# Deploy docker-compose
 - hosts: all
   tasks:
   - name: Create directory
@@ -13,6 +17,13 @@
       dest: /docker/docker-compose.yml
       mode: 0644
     become: yes
-  - name: Run docker containers
-    command: docker-compose -f /docker/docker-compose.yml up -d
-    become: yes
+  - name: Create a network
+    docker_network:
+      name: logging
+  - name: Tear down existing services
+    docker_compose:
+      project_src: /docker 
+      state: absent
+  - name: Create and start services
+    docker_compose:
+      project_src: /docker
