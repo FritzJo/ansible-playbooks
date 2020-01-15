@@ -1,0 +1,53 @@
+# Deploy nebula lighthouse and fetch client credentials
+- hosts: all
+  tasks:
+  - name: Create Nebula directory
+    file:
+      path: /etc/nebula/
+      state: directory
+    become: yes
+  - name: Download nebula binaries
+    get_url:
+      url: https://github.com/slackhq/nebula/releases/download/v1.0.0/nebula-linux-amd64.tar.gz
+      dest: /etc/nebula/
+      mode: '0440'
+  - name: Unarchive nebula binaries
+    unarchive:
+      src: /etc/nebula/nebula-linux-amd64.tar.gz
+      dest: /etc/nebula
+      remote_src: yes
+  - name: Creating CA certificates
+    command: ./nebula-cert ca -name "{{ org_name }}"
+    args: 
+      creates: 
+        - "/etc/nebula/ca.key"
+        - "/etc/nebula/ca.cert"
+    become: yes
+  - name: Creating certificates for lighthouse
+    command: ./nebula-cert sign -name "lighthouse" -ip "192.168.100.1/24"
+    args: 
+      creates: 
+        - "/etc/nebula/lighthouse.crt"
+        - "/etc/nebula/lighthouse.key"
+    become: yes
+  - name: Creating certificates for client
+    command: ./nebula-cert sign -name "client1" -ip "192.168.100.20/24"
+    args: 
+      creates: 
+        - "/etc/nebula/client1.crt"
+        - "/etc/nebula/client1.key"
+    become: yes 
+  - name: Copy config file
+    template:
+      src: config.j2
+      dest: /etc/nebula/config.yml
+      mode: 0644
+    become: yes
+  - name: Fetch client1.key
+    fetch:
+      src: /etc/nebula/client1.key
+      dest: client.key
+  - name: Fetch client1.crt
+    fetch:
+      src: /etc/nebula/client1.crt
+      dest: client.crt
