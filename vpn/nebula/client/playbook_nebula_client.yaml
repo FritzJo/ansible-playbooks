@@ -1,4 +1,4 @@
-# Deploy nebula lighthouse and fetch client credentials
+# Deploy nebula client
 - hosts: all
   tasks:
   - name: Create Nebula directory
@@ -39,4 +39,7 @@
       src: client1.key
       dest: /etc/nebula/client1.key
       mode: 0644
+    become: yes
+  - name: Connect to Nebula network
+    command: "( ( nohup ./nebula -config /etc/nebula/config.yaml 1>/dev/null 2>&1 ) & )"
     become: yes
