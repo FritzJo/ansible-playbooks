@@ -30,14 +30,14 @@
     become: yes
   - name: Copy client certificate
     template:
-      src: client1.crt
-      dest: /etc/nebula/client1.yml
+      src: {{ nebula_client_name }}.crt
+      dest: /etc/nebula/{{ nebula_client_name }}.yml
       mode: 0644
     become: yes
   - name: Copy client key
     template:
-      src: client1.key
-      dest: /etc/nebula/client1.key
+      src: {{ nebula_client_name }}.key
+      dest: /etc/nebula/{{ nebula_client_name }}.key
       mode: 0644
     become: yes
   - name: Connect to Nebula network

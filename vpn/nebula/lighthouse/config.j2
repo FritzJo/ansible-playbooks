@@ -162,10 +162,3 @@ firewall:
     - port: any
       proto: icmp
       host: any
-
-    # Allow tcp/443 from any host with BOTH laptop and home group
-    - port: 443
-      proto: tcp
-      groups:
-        - laptop
-        - home

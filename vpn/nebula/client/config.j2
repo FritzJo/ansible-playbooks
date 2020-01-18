@@ -5,8 +5,8 @@
 pki:
   # The CAs that are accepted by this node. Must contain one or more certificates created by 'nebula-cert ca'
   ca: /etc/nebula/ca.crt
-  cert: /etc/nebula/client1.crt
-  key: /etc/nebula/client1.key
+  cert: /etc/nebula/{{ nebula_client_name }}.crt
+  key: /etc/nebula/{{ nebula_client_name }}.key
   #blacklist is a list of certificate fingerprints that we will refuse to talk to
   #blacklist:
   #  - c99d4e650533b92061b09918e838a5a0a6aaee21eed1d12fd937682865936c72
@@ -163,10 +163,3 @@ firewall:
     - port: any
       proto: icmp
       host: any
-
-    # Allow tcp/443 from any host with BOTH laptop and home group
-    - port: 443
-      proto: tcp
-      groups:
-        - laptop
-        - home
