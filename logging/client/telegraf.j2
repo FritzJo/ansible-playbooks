@@ -116,7 +116,7 @@
   # ssl_cert = "/etc/telegraf/cert.pem"
   # ssl_key = "/etc/telegraf/key.pem"
   ## Use SSL but skip chain & host verification
-  # insecure_skip_verify = false
+  insecure_skip_verify = true 
 
 
 # # Configuration for Amon Server to send metrics to.
@@ -258,18 +258,18 @@
 
 
 # # Configuration for Graphite server to send metrics to
- [[outputs.graphite]]
+# [[outputs.graphite]]
 #   ## TCP endpoint for your graphite instance.
 #   ## If multiple endpoints are configured, output will be load balanced.
 #   ## Only one of the endpoints will be written to with each iteration.
-   servers = ["localhost:2003"]
+#   servers = ["localhost:2003"]
 #   ## Prefix metrics name
-   prefix = "local"
+#   prefix = "local"
 #   ## Graphite output template
 #   ## see https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_OUTPUT.md
-   template = "host.tags.measurement.field"
+#   template = "host.tags.measurement.field"
 #   ## timeout in seconds for the write connection to graphite
-   timeout = 2
+#   timeout = 2
 
 
 # # Send telegraf metrics to graylog(s)
@@ -950,7 +950,7 @@
 #   ## Only collect metrics for these containers, collect all if empty
 #   container_names = []
 #   ## Timeout for docker list, info, and stats commands
-#   timeout = "5s"
+#   timeout = "10s"
 #
 #   ## Whether to report for each container per-device blkio (8:0, 8:1...) and
 #   ## network (eth0, eth1, ...) stats or not
@@ -1523,7 +1523,7 @@
 
 
 # # Read metrics about network interface usage
-# [[inputs.net]]
+[[inputs.net]]
 #   ## By default, telegraf gathers stats from any up interface (excluding loopback)
 #   ## Setting interfaces will tell it to gather these explicit interfaces,
 #   ## regardless of status.
@@ -1627,16 +1627,16 @@
 
 
 # # Ping given url(s) and return statistics
-# [[inputs.ping]]
+[[inputs.ping]]
 #   ## NOTE: this plugin forks the ping command. You may need to set capabilities
 #   ## via setcap cap_net_raw+p /bin/ping
 #   #
 #   ## List of urls to ping
-#   urls = ["www.google.com"] # required
+  urls = ["www.google.com"] # required
 #   ## number of pings to send per collection (ping -c <COUNT>)
-#   # count = 1
+  count = 1
 #   ## interval, in s, at which to ping. 0 == default (ping -i <PING_INTERVAL>)
-#   # ping_interval = 1.0
+  ping_interval = 10.0
 #   ## per-ping timeout, in s. 0 == no timeout (ping -W <TIMEOUT>)
 #   # timeout = 1.0
 #   ## interface to send ping from (ping -I <INTERFACE>)
