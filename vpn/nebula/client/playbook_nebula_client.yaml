@@ -22,6 +22,9 @@
       dest: /etc/nebula/config.yml
       mode: 0644
     become: yes
+  - name: Generate certificates on ansible host
+    template:
+    local_action: ./nebula-cert sign -name "{{ nebula_client_name }}" -ip "{{ nebula_client_ip }}"
   - name: Copy ca certificate
     template:
       src: ca.crt
