@@ -34,7 +34,7 @@
   - name: Copy client certificate
     template:
       src: {{ nebula_client_name }}.crt
-      dest: /etc/nebula/{{ nebula_client_name }}.yml
+      dest: /etc/nebula/{{ nebula_client_name }}.crt
       mode: 0644
     become: yes
   - name: Copy client key
