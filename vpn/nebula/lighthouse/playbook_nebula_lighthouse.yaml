@@ -16,41 +16,28 @@
       src: /etc/nebula/nebula-linux-amd64.tar.gz
       dest: /etc/nebula
       remote_src: yes
-  - name: Creating CA certificates
-    command: ./nebula-cert ca -name "{{ org_name }}"
-    args: 
-      creates: 
-        - "/etc/nebula/ca.key"
-        - "/etc/nebula/ca.cert"
-    become: yes
+  - name: Creating CA certificates on ansible host
+    local_action: ./nebula-cert ca -name "{{ org_name }}"
   - name: Creating certificates for lighthouse
-    command: ./nebula-cert sign -name "lighthouse" -ip "192.168.100.1/24"
-    args: 
-      creates: 
-        - "/etc/nebula/lighthouse.crt"
-        - "/etc/nebula/lighthouse.key"
-    become: yes
-  - name: Creating certificates for client
-    command: ./nebula-cert sign -name "{{ nebula_client_name }}" -ip "192.168.100.{{ nebula_client_number }}/24"
-    args: 
-      creates: 
-        - "/etc/nebula/{{ nebula_client_name }}.crt"
-        - "/etc/nebula/{{ nebula_client_name }}.key"
-    become: yes 
+    local_action: ./nebula-cert sign -name "lighthouse" -ip "192.168.100.1/24"
   - name: Copy config file
     template:
       src: config.j2
       dest: /etc/nebula/config.yml
       mode: 0644
     become: yes
-  - name: Fetch {{ nebula_client_name }}.key
-    fetch:
-      src: /etc/nebula/{{ nebula_client_name }}.key
-      dest: {{ nebula_client_name }}.key
-  - name: Fetch {{ nebula_client_name }}.crt
-    fetch:
-      src: /etc/nebula/{{ nebula_client_name }}.crt
-      dest: {{ nebula_client_name }}.crt
+  - name: Copy lighthouse certificate
+    template:
+      src: lighthouse.crt
+      dest: /etc/nebula/lighthouse.crt
+      mode: 0644
+    become: yes
+  - name: Copy lighthouse key
+    template:
+      src: lighthouse.key
+      dest: /etc/nebula/lighthouse.key
+      mode: 0644
+    become: yes
   - name: Start nebula server application
     command: "( ( nohup ./nebula -config /etc/nebula/config.yaml 1>/dev/null 2>&1 ) & )"
     become: yes
