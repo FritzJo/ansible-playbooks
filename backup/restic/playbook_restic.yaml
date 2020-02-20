@@ -1,0 +1,16 @@
+# Installs restic on Debian 10 with a GCP backend
+
+- hosts: all 
+  tasks:
+  - name: Update the apt package index
+    become: yes
+    apt:
+      name: "*"
+      state: latest
+      update_cache: yes
+      force_apt_get: yes
+  - name: Install Restic 
+    become: yes
+    apt:
+      name: "restic"
+      state: latest
