@@ -1,0 +1,8 @@
+[Unit]
+Description=Nebula 
+
+[Service]
+ExecStart=/etc/nebula/nebula -config /etc/nebula/config.yaml
+
+[Install]
+WantedBy=multi-user.target
