@@ -19,28 +19,27 @@
   - name: Copy config file
     template:
       src: config.j2
-      dest: /etc/nebula/config.yml
+      dest: /etc/nebula/config.yaml
       mode: 0644
     become: yes
   - name: Generate certificates on ansible host
-    template:
-    local_action: ./nebula-cert sign -name "{{ nebula_client_name }}" -ip "{{ nebula_client_ip }}"
+    local_action: command sh -c 'cd {{ nebula_bin }} && ./nebula-cert sign -name "{{ nebula_client_name }}" -ip "{{ nebula_client_ip }}"'
   - name: Copy ca certificate
     template:
-      src: ca.crt
+      src: "{{ nebula_bin }}/ca.crt"
       dest: /etc/nebula/ca.crt
       mode: 0644
     become: yes
   - name: Copy client certificate
     template:
-      src: {{ nebula_client_name }}.crt
-      dest: /etc/nebula/{{ nebula_client_name }}.crt
+      src: "{{ nebula_bin }}/{{ nebula_client_name }}.crt"
+      dest: "/etc/nebula/{{ nebula_client_name }}.crt"
       mode: 0644
     become: yes
   - name: Copy client key
     template:
-      src: {{ nebula_client_name }}.key
-      dest: /etc/nebula/{{ nebula_client_name }}.key
+      src: "{{ nebula_bin }}/{{ nebula_client_name }}.key"
+      dest: "/etc/nebula/{{ nebula_client_name }}.key"
       mode: 0644
     become: yes
   - name: Copy service file
