@@ -59,7 +59,7 @@
       - docker-compose
       - gcc
       - python-dev
-      - python-pip
+      - python3-pip
       - python-setuptools
       - python-virtualenv
   - name: install ansible extensions
