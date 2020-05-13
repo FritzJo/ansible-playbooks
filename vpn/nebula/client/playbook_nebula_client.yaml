@@ -1,6 +1,20 @@
 # Deploy nebula client
 - hosts: all
   tasks:
+  - name: Update packages
+    become: yes
+    apt:
+      name: "*"
+      state: latest
+      update_cache: yes
+      force_apt_get: yes
+  - name: Install prerequisites
+    become: yes
+    apt:
+      name: "unzip"
+      force_apt_get: yes
+      state: latest
+      update_cache: yes
   - name: Create Nebula directory
     file:
       path: /etc/nebula/
@@ -9,13 +23,15 @@
   - name: Download nebula binaries
     get_url:
       url: https://github.com/slackhq/nebula/releases/download/v1.2.0/nebula-linux-amd64.tar.gz
-      dest: /etc/nebula/
+      dest: /etc/nebula 
       mode: '0440'
+    become: yes
   - name: Unarchive nebula binaries
     unarchive:
       src: /etc/nebula/nebula-linux-amd64.tar.gz
       dest: /etc/nebula
       remote_src: yes
+    become: yes
   - name: Copy config file
     template:
       src: config.j2
