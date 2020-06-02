@@ -1,4 +1,4 @@
-# Installes docker-ce and docker-compose on Debian 10
+# Installs docker-ce and docker-compose on Debian 10
 
 - hosts: all 
   tasks:
