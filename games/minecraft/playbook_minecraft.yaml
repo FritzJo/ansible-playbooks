@@ -1,0 +1,38 @@
+- hosts: all
+  tasks:
+  - name: Install java
+    apt:
+      name: default-jre-headless
+      state: present
+  - name: Create game directory
+    file:
+      path: /minecraft
+      state: directory
+    become: yes
+  - name: Copy server configuration file
+    template:
+      src: server.properties.j2
+      dest: /minecraft/server.properties
+      mode: 0644
+    become: yes
+  - name: Download server.jar
+    get_url:
+      url: https://launcher.mojang.com/v1/objects/a412fd69db1f81db3f511c1463fd304675244077/server.jar
+      dest: /minecraft/server.jar
+      mode: '0447'
+  - name: Accept EULA
+    copy:
+      dest: /minecraft/eula.txt
+      content: |
+          eula=true
+  - name: Copy systemd service file
+    copy:
+      src: minecraft.service
+      dest: /etc/systemd/system
+      owner: root
+      group: root
+  - name: Start minecraft server
+    systemd:
+      name: minecraft
+      state: started
+      enabled: yes
