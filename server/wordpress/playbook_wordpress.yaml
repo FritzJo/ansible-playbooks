@@ -1,0 +1,31 @@
+# Installs a new wordpress instance on Debian 10 using docker
+
+# Install docker 
+- import_playbook: ../../general/playbook_docker.yaml
+
+# Deploy docker-compose
+- hosts: all
+  tasks:
+  - set_fact:
+    db_pass: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+  - name: Create directory
+    file:
+      path: {{ wp_path }}
+      state: directory
+    become: yes
+  - name: Copy docker-compose.yml
+    template:
+      src: docker-compose.j2
+      dest: {{ wp_path }}/docker-compose.yml
+      mode: 0644
+    become: yes
+  - name: Create a network
+    docker_network:
+      name: proxy
+  - name: Tear down existing services
+    docker_compose:
+      project_src: {{ wp_path }}
+      state: absent
+  - name: Create and start services
+    docker_compose:
+      project_src: {{ wp_path }}
